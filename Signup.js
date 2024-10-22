@@ -82,7 +82,33 @@ catch(error)
 }
 })
 
+// Login Api :
 
+app.post('/api/login',async(req,res)=>
+{
+try{
+const  {Email,Password} = req.body;
+if(!Email || !Password)
+return res.status(400).json({message:"Email and Password are required"});
+// Find the Signup Email 
+const existinguser = await User.findOne({Email});
+if(!existinguser)
+{
+    return res.status(400).json({message :"Invalid Email or Password ."});
+}
+//  Check the Password  and Email
+if(existinguser.Password!=Password)
+{
+    return res.status(400).json({message :"Invalid Password ."})
+}
+res.status(200).json({message :"Login Successfull.", User:existinguser});
+
+}
+catch(error){
+console.log('Error During Login',error);
+res.status(500).json({message :'Error During Login'})
+}
+})
 
 
 app.listen(port,() =>
